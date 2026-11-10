@@ -1,0 +1,32 @@
+users
+  id (PK), email (unique, indexed), hashed_password,
+  role (customer | seller | admin), is_active, created_at
+
+categories
+  id (PK), name (unique), parent_id (FK -> categories, nullable)
+
+products
+  id (PK), seller_id (FK -> users), category_id (FK -> categories),
+  name (indexed), description, price (Numeric 10,2),
+  stock (int, CHECK stock >= 0), is_active, created_at
+
+carts
+  id (PK), user_id (FK, unique)
+
+cart_items
+  id (PK), cart_id (FK), product_id (FK), quantity
+  UNIQUE (cart_id, product_id)
+
+orders
+  id (PK), user_id (FK), status (pending | paid | shipped | cancelled),
+  total_amount, created_at
+
+order_items
+  id (PK), order_id (FK), product_id (FK),
+  quantity, unit_price          <- snapshot of price at purchase time
+
+payments
+  id (PK), order_id (FK), provider_ref, status, amount, created_at
+
+refresh_tokens
+  id (PK), user_id (FK), token_hash, expires_at, revoked
